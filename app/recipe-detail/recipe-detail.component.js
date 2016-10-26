@@ -1,9 +1,18 @@
 angular.module('recipeDetail').
     component('recipeDetail', {
-        template: '<p>Detail view for <span>{{$ctrl.recipeId}}</span></p>',
-        controller: ['$routeParams',
-            function RecipeDetailController($routeParams) {
-                this.recipeId = $routeParams.recipeId;
+        templateUrl: 'recipe-detail/recipe-detail.template.html',
+        controller: ['$http', '$routeParams',
+            function RecipeDetailController($http, $routeParams) {
+                var self = this;
+
+                self.setImage = function setImage(imageUrl) {
+                    self.mainImageUrl = imageUrl;
+                };
+
+                $http.get('data/' + $routeParams.recipeId + '.json').then(function (response) {
+                    self.recipe = response.data;
+                    self.setImage(self.recipe.images[0]);
+                })
             }
         ]
     });
